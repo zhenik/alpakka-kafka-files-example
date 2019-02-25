@@ -1,28 +1,27 @@
-import scalariform.formatter.preferences._
+resolvers += Resolver.typesafeRepo("releases")
+resolvers += "confluent" at "https://packages.confluent.io/maven/"
 
 // Project setup
-val rootPackage = "ru.zhenik"
+val rootPackage = "ru.zhenik.kafka.alpakka.consumer"
 val projectV = "0.0.1-SNAPSHOT"
-val scalaV = "2.12.8"
+val scalaV = "2.12.7"
 
 // https://www.scala-sbt.org/release/docs/Basic-Def-Examples.html
 lazy val settings = Seq(
   version := projectV,
   scalaVersion := scalaV,
 
-  test in assembly := {},
-
-  // set the main Scala source directory to be <base>/src
-  scalaSource in Compile := baseDirectory.value / "src/main/scala",
-
-  // set the Scala test source directory to be <base>/test
-  scalaSource in Test := baseDirectory.value / "src/test/scala",
-
-  // append several options to the list of options passed to the Java compiler
-  javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-  
-  // only use a single thread for building
-  parallelExecution := false,
+//  // set the main Scala source directory to be <base>/src
+//  scalaSource in Compile := baseDirectory.value / "src/main/scala",
+//
+//  // set the Scala test source directory to be <base>/test
+//  scalaSource in Test := baseDirectory.value / "src/test/scala",
+//
+//  // append several options to the list of options passed to the Java compiler
+//  javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
+//
+//  // only use a single thread for building
+//  parallelExecution := false,
 
 )
 
@@ -33,20 +32,13 @@ lazy val rootProject = project
     organization := rootPackage,
     version := projectV,
     settings,
-    libraryDependencies ++= commonDependencies ++ testDependencies
+    libraryDependencies ++= Seq (
+      "com.typesafe.akka"   %% "akka-stream-testkit" % "2.5.21" % Test,
+      "com.typesafe.akka"   %% "akka-stream"                       % "2.5.21",
+      "com.typesafe.akka"   %% "akka-stream-kafka"                 % "1.0-RC1",
+      "com.lightbend.akka"  %% "akka-stream-alpakka-file"          % "1.0-M2",
+      //  "com.typesafe"        % "config"                            % "1.3.3",
+      "ch.qos.logback"      % "logback-classic"                   % "1.2.3"         % Runtime,
+      "com.typesafe.akka"   % "akka-slf4j_2.12"                   % "2.5.16"
+    ) 
   )
-
-
-lazy val commonDependencies = Seq(
-  Dependency.akkaStreams
-)
-
-lazy val testDependencies = Seq(
-  Dependency.scalaTest
-)
-
-// code formatter, executed on goal:compile by default
-scalariformPreferences := scalariformPreferences.value
-  .setPreference(AlignSingleLineCaseStatements, true)
-  .setPreference(DoubleIndentConstructorArguments, true)
-  .setPreference(DanglingCloseParenthesis, Preserve)

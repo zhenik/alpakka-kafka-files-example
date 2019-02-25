@@ -1,5 +1,9 @@
 package ru.zhenik.kafka.alpakka.consumer
 
+import com.typesafe.config.ConfigFactory
+
 object Application extends App {
-  print("Yomaho")
+  val config = ApplicationConfig(ConfigFactory.load())
+  println(config)
+
 }
