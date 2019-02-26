@@ -15,8 +15,6 @@ import akka.util.ByteString
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
-import ru.zhenik.kafka.alpakka.consumer.FilesSinkExample.fs
-
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -41,6 +39,7 @@ object KafkaSourceExample extends App {
     )
       .withBootstrapServers(appConfig.Kafka.bootstrapServers)
       .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+      .withProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
       .withGroupId("some-consumer-group-1")
       .withClientId("consumer-akka-id-1")
   }
@@ -53,7 +52,9 @@ object KafkaSourceExample extends App {
 
   val flowFile: Flow[ConsumerMessage.CommittableMessage[String, String], ConsumerMessage.CommittableOffset, NotUsed] = Flow[ConsumerMessage.CommittableMessage[String, String]]
     .map(msg => {
+      //todo: handle exceptions with file creation
       val path = Files.createTempFile(fs.getPath("/tmp"), s"${msg.record.key}-${Instant.now.toEpochMilli}", ".log")
+
       Source.single(ByteString(msg.record.value())).runWith(FileIO.toPath(path)).onComplete(done => {
         if(done.isSuccess) {
           println(s"Commit msg with key: ${msg.record.key()}")

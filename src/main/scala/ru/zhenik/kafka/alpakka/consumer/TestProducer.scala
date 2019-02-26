@@ -18,6 +18,6 @@ object TestProducer extends App {
 
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](properties)
 
-  for (i <- 1 until 100)
+  for (i <- 100 until 200)
     producer.send(new ProducerRecord[String, String](appConfig.Kafka.topic, s"key-$i", s"some-value-$i")).get
 }
