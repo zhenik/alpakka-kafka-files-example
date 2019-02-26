@@ -33,12 +33,11 @@ lazy val rootProject = project
     version := projectV,
     settings,
     libraryDependencies ++= Seq (
-      "com.typesafe.akka"   %% "akka-stream-testkit" % "2.5.21" % Test,
-      "com.typesafe.akka"   %% "akka-stream"                       % "2.5.21",
-      "com.typesafe.akka"   %% "akka-stream-kafka"                 % "1.0-RC1",
-      "com.lightbend.akka"  %% "akka-stream-alpakka-file"          % "1.0-M2",
-      //  "com.typesafe"        % "config"                            % "1.3.3",
-      "ch.qos.logback"      % "logback-classic"                   % "1.2.3"         % Runtime,
-      "com.typesafe.akka"   % "akka-slf4j_2.12"                   % "2.5.16"
+      "com.typesafe.akka"   %% "akka-stream-testkit"              % "2.5.21"        % Test,
+      "com.typesafe.akka"   %% "akka-stream"                      % "2.5.21",
+      "com.typesafe.akka"   %% "akka-stream-kafka"                % "1.0-RC1",
+      "com.lightbend.akka"  %% "akka-stream-alpakka-file"         % "1.0-M2",
+      "ch.qos.logback"      % "logback-classic"                   % "1.2.3",
+      "com.typesafe.akka"   % "akka-slf4j_2.12"                   % "2.5.21"
     ) 
   )
