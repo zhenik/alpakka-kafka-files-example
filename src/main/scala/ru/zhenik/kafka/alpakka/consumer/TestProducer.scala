@@ -5,8 +5,6 @@ import java.time.Instant
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.StringSerializer
-import scala.collection.JavaConverters._
-
 
 object TestProducer extends App {
   val appConfig: ApplicationConfig = ApplicationConfig(ConfigFactory.load())
@@ -18,9 +16,8 @@ object TestProducer extends App {
   properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
   properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
 
-
   val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](properties)
 
-  producer.send(new ProducerRecord[String, String](appConfig.Kafka.topic, "key-1", "some-value")).get
-
+  for (i <- 1 until 100)
+    producer.send(new ProducerRecord[String, String](appConfig.Kafka.topic, s"key-$i", s"some-value-$i")).get
 }
